@@ -29,7 +29,17 @@ app.engine(
 );
 app.set("view engine", "hbs");
 
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
 app.get("/", (req, res) => res.redirect("/users"));
 app.use("/users", require("./routes/userRouter"));
+
+app.get("/createTables", (req, res) => {
+  let models = require("./models");
+  models.sequelize.sync().then(() => {
+      res.send("Table created!");
+  });
+});
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
